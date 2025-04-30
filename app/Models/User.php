@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +45,59 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    
+    /**
+     * Check if the user is an admin
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+    
+    /**
+     * Check if the user is an organizer
+     *
+     * @return bool
+     */
+    public function isOrganizer(): bool
+    {
+        return $this->role === 'organizer';
+    }
+    
+    /**
+     * Check if the user is a student
+     *
+     * @return bool
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
+    
+    /**
+     * Get the events created by this user
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+    
+    /**
+     * Get the subscriptions by this user
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscriber::class);
+    }
+    
+    /**
+     * Get the events this user is subscribed to
+     */
+    public function subscribedEvents()
+    {
+        return $this->belongsToMany(Event::class, 'subscribers');
     }
 }

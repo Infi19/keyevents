@@ -20,10 +20,28 @@ class Event extends Model
         'time_to_hour',
         'time_to_minute',
         'time_to_period',
-       
+        'status',
+        'user_id',
+        'rejection_reason',
     ];
 
     protected $casts = [
         'event_date' => 'date',
     ];
+    
+    /**
+     * Get the user that owns the event (organizer)
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
+    /**
+     * Get all subscribers for this event
+     */
+    public function subscribers()
+    {
+        return $this->hasMany(Subscriber::class);
+    }
 }

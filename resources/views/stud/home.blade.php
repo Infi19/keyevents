@@ -4,198 +4,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
-
-    <!-- Include Google Fonts for Raleway -->
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Include Google Fonts for Teko -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
-
+    <title>EventHub - College Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @vite('resources/css/app.css')
-
     <style>
-        .h1class {
-            font-family: 'Raleway', sans-serif; /* Apply Raleway font */
+        body {
+            font-family: 'Inter', sans-serif;
         }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="">
-   
+<body class="bg-white">
     <x-header></x-header>
-  
     
-    <div style="padding-top:30px " class="mr-4 ml-4 md:mr-40 md:ml-40">   
+    <!-- Hero Section -->
+    <div class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-2xl">
+                <h1 class="text-4xl font-bold mb-4">Discover Amazing College Events</h1>
+                <p class="text-xl text-gray-300 mb-8">Join workshops, seminars, and cultural events. Connect with your college community.</p>
+                <div class="flex flex-wrap gap-3">
+                    <a href="#events" class="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium">Browse Events</a>
+                    <a href="{{ route('setup.form') }}" class="bg-transparent border border-white text-white hover:bg-white/10 px-6 py-3 rounded-lg font-medium">Create Event</a>
+                </div>
+            </div>
+        </div>
+    </div>
     
-        {{-- DIV FOR UPCOMING EVENT --}}
-        <div class="mb-10">
-            <div class="flex">
-                <h1 class="font-bold font-teko text-4xl text-custom-kcolor">UPCOMING</h1>
-                <h1 class="font-bold font-teko text-4xl pl-1">EVENT</h1>
+    <!-- Search Section -->
+    <div class="max-w-7xl mx-auto px-6 py-8" id="events">
+        <div class="flex flex-wrap items-center gap-4 mb-8">
+            <div class="w-full md:w-auto flex-grow">
+                <input 
+                    type="text" 
+                    placeholder="Search events..." 
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
             </div>
-            
-            @if($upcomingEvent)
-            <div class="w-full h-[525px] relative bg-slate-600 overflow-hidden shadow-md rounded-lg">
-                <!-- Upcoming Event Image -->
-                <a href="{{ route('stud.events.show', $upcomingEvent->id) }}">
-                    @if($upcomingEvent->image_path)
-                        <img class="w-full h-full object-cover aspect-[956/620]" 
-                             src="{{ asset('storage/' . $upcomingEvent->image_path) }}" 
-                             alt="{{ $upcomingEvent->title }}"
-                             onerror="this.src='{{ asset('images/placeholder.jpg') }}'; this.onerror=null;">
-                    @else
-                        <img class="w-full h-full object-cover" 
-                             src="{{ asset('images/placeholder.jpg') }}" 
-                             alt="Placeholder Image">
-                    @endif
-                </a>
-        
-                {{-- UPCOMING EVENT DETAILS DIV --}}
-                <div class="w-[400px] h-[200px] absolute bottom-5 right-5 bg-black bg-opacity-75 p-6 text-white rounded-md">
-                    <a href="{{ route('stud.events.show', $upcomingEvent->id) }}">
-                        <h1 class="event_title text-left font-bold font-teko text-2xl m-0 p-0 leading-none">{{ $upcomingEvent->title }}</h1>
-                    </a>
-                    <p class="event_date text-gray-300 font-calibri font-normal m-0 p-0 leading-none mb-1">{{ $upcomingEvent->category }}</p>
-                    <p class="event_date text-gray-300 font-calibri font-normal m-0 p-0 leading-none">
-                        {{ \Carbon\Carbon::parse($upcomingEvent->event_date)->format('D, M j, Y') }} | 
-                        {{ $upcomingEvent->time_from_hour }}:{{ str_pad($upcomingEvent->time_from_minute, 2, '0', STR_PAD_LEFT) }} {{ $upcomingEvent->time_from_period }} to 
-                        {{ $upcomingEvent->time_to_hour }}:{{ str_pad($upcomingEvent->time_to_minute, 2, '0', STR_PAD_LEFT) }} {{ $upcomingEvent->time_to_period }}
-                    </p>
-                    <div class="event_type mt-16 flex items-center">
-                        @if($upcomingEvent->type === 'In-Person')
-                            <ion-icon name="person-outline" class="text-white text-xl mr-2"></ion-icon>
-                            <p class="text-white font-calibri font-normal m-0 p-0 leading-none">In-Person Event</p>
-                        @elseif($upcomingEvent->type === 'Virtual')
-                            <ion-icon name="desktop-outline" class="text-white text-xl mr-2"></ion-icon>
-                            <p class="text-white font-calibri font-normal m-0 p-0 leading-none">Virtual Event</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @else
-            <div class="w-full h-[525px] relative bg-slate-100 overflow-hidden shadow-md rounded-lg flex items-center justify-center">
-                <p class="text-gray-500 text-xl">No upcoming events scheduled</p>
-            </div>
-            @endif
-        </div>
-        
-
-        {{-- <div class="border-y border-gray-300 px-4 w-[700px] mx-auto text-center mb-10 static mt-20">
-            <h1 class="h1class mt-5 mb-5 ">K  E  Y  E  V  E  N  T  S</h1>
-            
-        </div> --}}
-        
-        
-        
-        {{-- FILTER --}}
-        {{-- <div class="     relative bottom-5">
-            <div class="flex items-center w-[130px] h-[45px] bg-custom-kcolor absolute right-0 top-0 rounded">
-                <div>
-                <h1 class="font-bold font-calibri text-xl text-white mr-2 ml-4" >FILTER</h1>
-                </div>
-                <div>
-                <ion-icon name="options" class="size-5 text-white ml-4"></ion-icon>
-                </div>
-            </div>
-        </div> --}}
-
-
-
-        <div class="flex  ">
-            <a href="{{route('stud.home')}}" class="cursor-pointer">
-                <h1 class="font-bold font-teko text-4xl pl-1">EVENTS</h1>
-            </a>
-        </div>
-
-        <div class="relative bottom-10">
-            <div class="flex items-center absolute right-0 -top-1">
-                <x-drop-d class="mb-12"></x-drop-d>
+            <div class="flex flex-wrap gap-3">
+                <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                    <option value="">All Departments</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Business">Business</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Arts">Arts</option>
+                </select>
+                
+                <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                    <option value="">Event Type</option>
+                    <option value="In-Person">In-Person</option>
+                    <option value="Virtual">Virtual</option>
+                </select>
+                
+                <input type="date" class="border border-gray-300 rounded-lg px-4 py-2">
             </div>
         </div>
         
+        <!-- Event Tabs -->
+        <div class="border-b border-gray-200 mb-6">
+            <div class="flex gap-8">
+                <button class="pb-4 text-blue-600 border-b-2 border-blue-600 font-medium">Upcoming</button>
+                <button class="pb-4 text-gray-500 hover:text-gray-700">Ongoing</button>
+                <button class="pb-4 text-gray-500 hover:text-gray-700">Past</button>
+            </div>
+        </div>
         
-
-
-        @if(request('filter') || request('category'))
-        <p class="mb-4 ml-1">
-            Filtered by:
-            @if(request('filter'))
-                <strong>Type: {{ request('filter') }}</strong>
-            @endif
-            @if(request('category'))
-                @if(request('filter'))
-                    and
-                @endif
-                <strong>Category: {{ request('category') }}</strong>
-            @endif
-        </p>
-    @endif
-    
-    @if($events->isEmpty())
-    <x-noResult />
-    @else
-
         <!-- Events Grid -->
-        <div class="events_box grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10  py-8">
-            @foreach($events as $event)
-                <div class="event_template p-0 bg-white flex flex-col items-start h-96 transition-transform transform hover:scale-105 hover:translate-y-1 shadow-md rounded-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            @foreach($events as $index => $event)
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <!-- Event Image -->
-                    <a href="{{ route('stud.events.show', $event->id) }}" class="cursor-pointer">
-                        <div class="event_image mt-4">
-                            @if($event->image_path)
-                                <img class="w-full h-auto object-cover" 
-                                     src="{{ Storage::url($event->image_path) }}" 
-                                     alt="{{ $event->title }}"
-                                     onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
-                            @else
-                                <img class="w-full h-auto object-cover" 
-                                     src="{{ asset('images/placeholder.jpg') }}" 
-                                     alt="Placeholder">
-                            @endif
-                        </div>
-                    </a>
-        
-                    <!-- Event Details -->
-                    <div class="event_template_details px-4 mt-4 flex flex-col leading-none">
-                        <a href="{{ route('stud.events.show', $event->id) }}" class="cursor-pointer">
-                            <h1 class="event_title text-left font-bold font-teko text-2xl m-0 p-0 leading-none cursor-pointer">{{ $event->title }}</h1>
-                        </a>
-                        <p class="event_date text-gray-800 font-calibri font-normal m-0 p-0 leading-none mb-1">{{ $event->category }}</p>
-                        <p class="event_date text-gray-800 font-calibri font-normal m-0 p-0 leading-none">
-                            {{ \Carbon\Carbon::parse($event->event_date)->format('D, M j, Y') }} | 
-                            {{ $event->time_from_hour }}:{{ str_pad($event->time_from_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_from_period }} to 
-                            {{ $event->time_to_hour }}:{{ str_pad($event->time_to_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_to_period }}
-                        </p>
-                    </div>
-        
-                    <!-- Event Type Section -->
-                    <div class="event_type px-4 mt-auto mb-4 flex items-center w-full pt-3">
-                        @if($event->type === 'In-Person')
-                            <ion-icon name="person-outline" class="text-gray-600 text-xl mr-2"></ion-icon>
-                            <p class="text-gray-600 font-calibri font-normal m-0 p-0 leading-none">In-Person Event</p>
-                        @elseif($event->type === 'Virtual')
-                            <ion-icon name="desktop-outline" class="text-gray-600 text-xl mr-2"></ion-icon>
-                            <p class="text-gray-600 font-calibri font-normal m-0 p-0 leading-none">Virtual Event</p>
+                    <div class="h-48 bg-gray-600 relative">
+                        @if($event->image_path)
+                            <img 
+                                class="w-full h-full object-cover" 
+                                src="{{ asset('storage/' . $event->image_path) }}" 
+                                alt="{{ $event->title }}"
+                                onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
+                        @else
+                            <img 
+                                class="w-full h-full object-cover" 
+                                src="{{ asset('images/placeholder.jpg') }}" 
+                                alt="Placeholder">
                         @endif
+                        
+                        <!-- Event Category Badge -->
+                        <div class="absolute top-3 right-3">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $index === 0 ? 'bg-yellow-100 text-yellow-800' : ($index === 1 ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800') }}">
+                                {{ $event->category }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Event Content -->
+                    <div class="p-5">
+                        <h3 class="text-lg font-semibold mb-2">
+                            <a href="{{ route('stud.events.show', $event->id) }}" class="text-gray-900 hover:text-blue-600">
+                                {{ $event->title }}
+                            </a>
+                        </h3>
+                        
+                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">
+                            {{ \Illuminate\Support\Str::limit($event->about, 100) }}
+                        </p>
+                        
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}
+                            <span class="mx-2">|</span>
+                            {{ $event->time_from_hour }}:{{ str_pad($event->time_from_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_from_period }}
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <!-- Event Type -->
+                            <div class="flex items-center text-sm">
+                                @if($event->type === 'In-Person')
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-gray-600">In-Person</span>
+                                @else
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4v-4H5a2 2 0 01-2-2V5zm2-2a4 4 0 00-4 4v8a4 4 0 004 4h1v2l6-6h5a4 4 0 004-4V7a4 4 0 00-4-4H5z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-gray-600">Virtual</span>
+                                @endif
+                            </div>
+                            
+                            <!-- Seats Left -->
+                            <span class="text-sm text-gray-500">{{ rand(10, 150) }} seats left</span>
+                        </div>
+                        
+                        <a href="{{ route('stud.events.show', $event->id) }}" class="block mt-4 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">Register</a>
                     </div>
                 </div>
             @endforeach
         </div>
         
-    @endif
-    
-    <div class="mt-2 mb-10  ">
-        {{ $events->appends(request()->query())->links('paginate') }}
+        <!-- Pagination -->
+        <div class="flex justify-center mb-16">
+            {{ $events->appends(request()->query())->links('paginate') }}
+        </div>
     </div>
     
-    
-        
-    </div>   
     <x-footer></x-footer>
-
- 
+    
+    <!-- Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         if (Schema::hasTable('subscribers')) {
             Schema::table('subscribers', function (Blueprint $table) {
-                if (!Schema::hasColumn('subscribers', 'is_active')) {
-                    $table->boolean('is_active')->default(true)->after('status');
+                if (!Schema::hasColumn('subscribers', 'status')) {
+                    $table->string('status')->default('registered')->after('event_id');
                 }
             });
         }
@@ -27,8 +27,8 @@ return new class extends Migration
     {
         if (Schema::hasTable('subscribers')) {
             Schema::table('subscribers', function (Blueprint $table) {
-                if (Schema::hasColumn('subscribers', 'is_active')) {
-                    $table->dropColumn('is_active');
+                if (Schema::hasColumn('subscribers', 'status')) {
+                    $table->dropColumn('status');
                 }
             });
         }

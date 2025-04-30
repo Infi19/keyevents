@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Only run if the subscribers table exists
         if (Schema::hasTable('subscribers')) {
             Schema::table('subscribers', function (Blueprint $table) {
-                if (!Schema::hasColumn('subscribers', 'is_active')) {
-                    $table->boolean('is_active')->default(true)->after('status');
+                // Add status column if it doesn't exist
+                if (!Schema::hasColumn('subscribers', 'status')) {
+                    $table->string('status')->default('registered')->after('event_id');
                 }
             });
         }
@@ -27,10 +29,10 @@ return new class extends Migration
     {
         if (Schema::hasTable('subscribers')) {
             Schema::table('subscribers', function (Blueprint $table) {
-                if (Schema::hasColumn('subscribers', 'is_active')) {
-                    $table->dropColumn('is_active');
+                if (Schema::hasColumn('subscribers', 'status')) {
+                    $table->dropColumn('status');
                 }
             });
         }
     }
-};
+}; 

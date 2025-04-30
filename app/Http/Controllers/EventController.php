@@ -45,21 +45,46 @@ class EventController extends Controller
                 // For debugging
                 Log::info('Image uploaded to: ' . $imagePath);
             }
+            
+            // Get the current user ID or null if not authenticated
+            $userId = auth()->check() ? auth()->id() : null;
 
-            $event = Event::create([
-                'title' => $validated['title'],
-                'about' => $validated['about'],
-                'image_path' => $imagePath,
-                'type' => $validated['type'],
-                'category' => $validated['category'],
-                'event_date' => $validated['event_date'],
-                'time_from_hour' => $validated['time_from_hour'],
-                'time_from_minute' => $validated['time_from_minute'],
-                'time_from_period' => $validated['time_from_period'],
-                'time_to_hour' => $validated['time_to_hour'],
-                'time_to_minute' => $validated['time_to_minute'],
-                'time_to_period' => $validated['time_to_period'],
-            ]);
+            try {
+                $event = Event::create([
+                    'title' => $validated['title'],
+                    'about' => $validated['about'],
+                    'image_path' => $imagePath,
+                    'type' => $validated['type'],
+                    'category' => $validated['category'],
+                    'event_date' => $validated['event_date'],
+                    'time_from_hour' => $validated['time_from_hour'],
+                    'time_from_minute' => $validated['time_from_minute'],
+                    'time_from_period' => $validated['time_from_period'],
+                    'time_to_hour' => $validated['time_to_hour'],
+                    'time_to_minute' => $validated['time_to_minute'],
+                    'time_to_period' => $validated['time_to_period'],
+                    'user_id' => $userId,
+                    'status' => 'pending',
+                ]);
+            } catch (\Exception $e) {
+                // If user_id column doesn't exist, create event without it
+                Log::error('Error creating event with user_id: ' . $e->getMessage());
+                $event = Event::create([
+                    'title' => $validated['title'],
+                    'about' => $validated['about'],
+                    'image_path' => $imagePath,
+                    'type' => $validated['type'],
+                    'category' => $validated['category'],
+                    'event_date' => $validated['event_date'],
+                    'time_from_hour' => $validated['time_from_hour'],
+                    'time_from_minute' => $validated['time_from_minute'],
+                    'time_from_period' => $validated['time_from_period'],
+                    'time_to_hour' => $validated['time_to_hour'],
+                    'time_to_minute' => $validated['time_to_minute'],
+                    'time_to_period' => $validated['time_to_period'],
+                    'status' => 'pending',
+                ]);
+            }
 
             // Add debugging
             Log::info('Created event with image path: ' . $imagePath);
@@ -99,13 +124,54 @@ class EventController extends Controller
     return view('stud.events.show', compact('event'));
     }
     
-        // In your EventController
-
     public function dashboard()
     {
-        $events = Event::paginate(10);  // Get all events
-        return view('dashboard', compact('events'));  // Pass the events to the dashboard view
+        $user = auth()->user();
+        
+        // Redirect users to their proper dashboard
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isStudent()) {
+            return redirect()->route('stud.dashboard');
+        }
+        
+        // Only organizers should reach this point
+        if ($user->isOrganizer()) {
+            try {
+                // Try to get events by user_id
+                $events = Event::where('user_id', $user->id)->paginate(10);
+                
+                // Organizer statistics
+                $stats = [
+                    'total_events' => Event::where('user_id', $user->id)->count(),
+                    'approved_events' => Event::where('user_id', $user->id)->where('status', 'approved')->count(),
+                    'pending_events' => Event::where('user_id', $user->id)->where('status', 'pending')->count(),
+                    'total_participants' => Subscriber::whereHas('event', function($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })->count(),
+                    'recent_events' => Event::where('user_id', $user->id)
+                        ->orderBy('created_at', 'desc')
+                        ->take(5)
+                        ->get()
+                ];
+            } catch (\Exception $e) {
+                // Fallback in case user_id column doesn't exist yet
+                $events = Event::paginate(10);
+                
+                // Basic statistics without filtering by user
+                $stats = [
+                    'total_events' => Event::count(),
+                    'approved_events' => Event::where('status', 'approved')->count(),
+                    'pending_events' => Event::where('status', 'pending')->count(),
+                    'total_participants' => Subscriber::count(),
+                    'recent_events' => Event::orderBy('created_at', 'desc')->take(5)->get()
+                ];
+            }
+            
+            return view('dashboard', compact('events', 'stats'));
+        } else {
+            // Shouldn't reach here, but just in case
+            return redirect()->route('stud.home');
+        }
     }
-
-
 }
