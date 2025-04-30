@@ -23,6 +23,7 @@ class Event extends Model
         'status',
         'user_id',
         'rejection_reason',
+        'seats_available',
     ];
 
     protected $casts = [

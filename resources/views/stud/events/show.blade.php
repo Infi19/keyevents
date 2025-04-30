@@ -80,7 +80,7 @@
                 <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-900">Ready to attend?</h3>
-                        <span class="text-gray-600">{{ rand(10, 150) }} seats left</span>
+                        <span class="text-gray-600">{{ $event->seats_available ?? 'Limited' }} seats available</span>
                     </div>
                     
                     <button class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-md transition-colors">

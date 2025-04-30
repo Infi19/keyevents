@@ -43,16 +43,16 @@ Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
 
 // Organizer only routes
 Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () {
-    // Events management for organizers
-    Route::get('/organizer/setup', function () {
-        return view('admin.setup');
-    })->name('setup.form');
-    Route::post('/organizer/setup', [EventController::class, 'store'])->name('setup.submit');
+    // Nothing specific to only organizers here anymore - moved to shared section
 });
 
 // Admin and Organizer shared routes
 Route::middleware(['auth', CheckRole::class . ':organizer,admin'])->group(function () {
-    // Nothing here for now - moved organizer routes to their own group
+    // Event creation for both admins and organizers
+    Route::get('/organizer/setup', function () {
+        return view('admin.setup');
+    })->name('setup.form');
+    Route::post('/organizer/setup', [EventController::class, 'store'])->name('setup.submit');
 });
 
 // Admin only routes

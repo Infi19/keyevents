@@ -36,6 +36,7 @@ class EventController extends Controller
                 'time_to_hour' => 'required|integer|min:1|max:12',
                 'time_to_minute' => 'required|integer|min:0|max:59',
                 'time_to_period' => 'required|string|in:AM,PM',
+                'seats_available' => 'required|integer|min:1|max:1000',
             ]);
 
             $imagePath = null;
@@ -48,6 +49,13 @@ class EventController extends Controller
             
             // Get the current user ID or null if not authenticated
             $userId = auth()->check() ? auth()->id() : null;
+            
+            // Determine the status based on user role
+            $status = 'pending';
+            if (auth()->user()->isAdmin()) {
+                // Admins can create pre-approved events
+                $status = 'approved';
+            }
 
             try {
                 $event = Event::create([
@@ -64,7 +72,8 @@ class EventController extends Controller
                     'time_to_minute' => $validated['time_to_minute'],
                     'time_to_period' => $validated['time_to_period'],
                     'user_id' => $userId,
-                    'status' => 'pending',
+                    'status' => $status,
+                    'seats_available' => $validated['seats_available'],
                 ]);
             } catch (\Exception $e) {
                 // If user_id column doesn't exist, create event without it
@@ -82,7 +91,8 @@ class EventController extends Controller
                     'time_to_hour' => $validated['time_to_hour'],
                     'time_to_minute' => $validated['time_to_minute'],
                     'time_to_period' => $validated['time_to_period'],
-                    'status' => 'pending',
+                    'status' => $status,
+                    'seats_available' => $validated['seats_available'],
                 ]);
             }
 
@@ -97,7 +107,12 @@ class EventController extends Controller
 
             DB::commit();
             
-            return redirect()->route('dashboard')->with('success', 'Event created successfully!');
+            // Customize success message and redirect based on user role
+            if (auth()->user()->isAdmin()) {
+                return redirect()->route('admin.dashboard')->with('success', 'Event created and automatically approved!');
+            } else {
+                return redirect()->route('dashboard')->with('success', 'Event created successfully! Waiting for admin approval.');
+            }
 
         } catch (ValidationException $e) {
             DB::rollBack();

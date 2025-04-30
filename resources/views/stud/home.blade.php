@@ -26,7 +26,6 @@
                 <p class="text-xl text-gray-300 mb-8">Join workshops, seminars, and cultural events. Connect with your college community.</p>
                 <div class="flex flex-wrap gap-3">
                     <a href="#events" class="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium">Browse Events</a>
-                    <a href="{{ route('setup.form') }}" class="bg-transparent border border-white text-white hover:bg-white/10 px-6 py-3 rounded-lg font-medium">Create Event</a>
                 </div>
             </div>
         </div>
@@ -135,7 +134,7 @@
                             </div>
                             
                             <!-- Seats Left -->
-                            <span class="text-sm text-gray-500">{{ rand(10, 150) }} seats left</span>
+                            <span class="text-sm text-gray-500">{{ $event->seats_available ?? 'Limited' }} seats available</span>
                         </div>
                         
                         <a href="{{ route('stud.events.show', $event->id) }}" class="block mt-4 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">Register</a>
