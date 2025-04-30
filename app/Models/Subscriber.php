@@ -16,6 +16,10 @@ class Subscriber extends Model
         'attendance',
     ];
 
+    protected $casts = [
+        'attendance' => 'boolean',
+    ];
+
     /**
      * Get the user associated with the subscription
      */

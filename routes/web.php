@@ -9,6 +9,7 @@ use App\Http\Controllers\SubscriberController;
 use App\Http\Middleware\CheckRole;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\RegistrationController;
 
 // Public routes accessible to all users
 Route::get('/', [HomeController::class, 'index'])->name('stud.home');
@@ -39,6 +40,11 @@ Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
     Route::get('/student/my-events', [StudentController::class, 'myEvents'])->name('my.events');
     Route::get('/student/certificates', [StudentController::class, 'certificates'])->name('certificates');
     Route::get('/student/notifications', [StudentController::class, 'notifications'])->name('notifications');
+    
+    // Event registration routes
+    Route::post('/events/{id}/register', [RegistrationController::class, 'register'])->name('event.register');
+    Route::delete('/events/{id}/cancel', [RegistrationController::class, 'cancel'])->name('event.cancel');
+    Route::get('/my-registrations', [RegistrationController::class, 'myRegistrations'])->name('stud.registrations');
 });
 
 // Organizer only routes
