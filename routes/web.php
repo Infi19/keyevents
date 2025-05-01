@@ -52,6 +52,8 @@ Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
 Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () {
     // New organizer dashboard
     Route::get('/organizer/dashboard', [OrganizerController::class, 'dashboard'])->name('organizer.dashboard');
+    // My Events page
+    Route::get('/organizer/my-events', [OrganizerController::class, 'myEvents'])->name('organizer.my-events');
 });
 
 // Admin and Organizer shared routes
