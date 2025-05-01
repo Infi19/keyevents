@@ -2,6 +2,19 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
+    <!-- Flash Messages -->
+    @if(session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow" role="alert">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow" role="alert">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold text-gray-900">My Events</h1>
         <a href="{{ route('setup.form') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
@@ -68,7 +81,7 @@
                 </div>
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                    <input type="text" id="search" name="search" value="{{ request('search') }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Search by title or description">
+                    <input type="text" id="search" name="search" value="{{ request('search') }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Search by title or description about">
                 </div>
                 <div class="flex items-end">
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
@@ -105,8 +118,8 @@
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        @if($event->image)
-                                            <img class="h-10 w-10 rounded-full object-cover mr-3" src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}">
+                                        @if($event->image_path)
+                                            <img class="h-10 w-10 rounded-full object-cover mr-3" src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}">
                                         @else
                                             <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,7 +129,7 @@
                                         @endif
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">{{ $event->title }}</div>
-                                            <div class="text-sm text-gray-500">{{ Str::limit($event->description, 50) }}</div>
+                                            <div class="text-sm text-gray-500">{{ Str::limit($event->about, 50) }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -148,8 +161,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">
                                         <a href="{{ route('stud.events.show', $event->id) }}" class="text-blue-600 hover:text-blue-900">View</a>
-                                        <a href="#" class="text-green-600 hover:text-green-900">Edit</a>
-                                        <a href="#" class="text-red-600 hover:text-red-900">Delete</a>
+                                        <a href="{{ route('organizer.events.edit', $event->id) }}" class="text-green-600 hover:text-green-900">Edit</a>
+                                        <form action="{{ route('organizer.events.destroy', $event->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-2">Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

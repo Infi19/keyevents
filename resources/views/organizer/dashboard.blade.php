@@ -107,8 +107,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500">
                                         @php
-                                            $registrations = $event->registrations()->count();
-                                            $maxRegistrations = $event->max_participants ?? 50;
+                                            $registrations = $event->subscribers()->count();
+                                            $maxRegistrations = $event->seats_available ?? 50;
                                             echo $registrations . '/' . $maxRegistrations;
                                         @endphp
                                     </div>

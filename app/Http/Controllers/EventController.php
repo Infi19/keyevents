@@ -148,6 +148,36 @@ class EventController extends Controller
     {
         $user = auth()->user();
         
+        // Prepare common stats before redirecting
+        $stats = [];
+        
+        // Get total events by this organizer
+        $stats['total_events'] = Event::where('user_id', $user->id)->count();
+        
+        // Get approved events by this organizer
+        $stats['approved_events'] = Event::where('user_id', $user->id)
+                                    ->where('status', 'approved')
+                                    ->count();
+        
+        // Get pending events by this organizer
+        $stats['pending_events'] = Event::where('user_id', $user->id)
+                                    ->where('status', 'pending')
+                                    ->count();
+        
+        // Get total participants (subscribers) for this organizer's events
+        $stats['total_participants'] = Subscriber::whereHas('event', function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->count();
+        
+        // Get recent events by this organizer
+        $stats['recent_events'] = Event::where('user_id', $user->id)
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get();
+        
+        // Store stats in session for use in dashboard views
+        session(['dashboard_stats' => $stats]);
+        
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'organizer') {

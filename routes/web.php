@@ -54,6 +54,13 @@ Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () 
     Route::get('/organizer/dashboard', [OrganizerController::class, 'dashboard'])->name('organizer.dashboard');
     // My Events page
     Route::get('/organizer/my-events', [OrganizerController::class, 'myEvents'])->name('organizer.my-events');
+    // Registrations pages
+    Route::get('/organizer/registrations', [OrganizerController::class, 'registrations'])->name('organizer.registrations');
+    Route::get('/organizer/registrations/{event}', [OrganizerController::class, 'eventRegistrations'])->name('organizer.event.registrations');
+    // Event management routes
+    Route::get('/organizer/events/{event}/edit', [OrganizerController::class, 'edit'])->name('organizer.events.edit');
+    Route::put('/organizer/events/{event}', [OrganizerController::class, 'update'])->name('organizer.events.update');
+    Route::delete('/organizer/events/{event}', [OrganizerController::class, 'destroy'])->name('organizer.events.destroy');
 });
 
 // Admin and Organizer shared routes
