@@ -32,6 +32,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Models\Subscriber;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -39,37 +42,81 @@ class HomeController extends Controller
     {
         // Get the current date.
         $currentDate = Carbon::now()->toDateString();
+        Log::info("Current date: " . $currentDate);
 
         // Retrieve filter parameters from the query string.
         $filter   = $request->query('filter');    // e.g., 'In-Person' or 'Virtual'
         $category = $request->query('category');    // e.g., 'Seminars and Talks', 'Workshop', etc.
 
-        // Fetch the upcoming event (ignoring any filters)
-        $upcomingEvent = Event::where('event_date', '>=', $currentDate)
-                              ->orderBy('event_date', 'asc')
-                              ->first();
-
-        // Build a query for upcoming events to be filtered.
-        $eventsQuery = Event::where('event_date', '>=', $currentDate);
+        // SIMPLIFIED: Directly fetch all approved events regardless of date
+        $eventsQuery = Event::where('status', 'approved');
+        
+        // Apply filters if they exist
         if ($filter) {
             $eventsQuery->where('type', $filter);
         }
+        
         if ($category) {
             $eventsQuery->where('category', $category);
         }
-        if ($upcomingEvent) {
-            $eventsQuery->where('id', '!=', $upcomingEvent->id);
-        }
-        $events = $eventsQuery->orderBy('event_date', 'asc')->paginate(6);
 
-        // Fallback: if no upcoming events match the filters (and there's no upcoming event),
-        // you might show past events. Adjust this fallback logic if needed.
-        if ($upcomingEvent === null && $events->isEmpty()) {
-            $events = Event::where('event_date', '<=', $currentDate)
-                           ->orderBy('event_date', 'desc')
-                           ->paginate(6);
+        // Log the total count of events
+        $allEvents = Event::all();
+        Log::info("Total events in database: " . $allEvents->count());
+        foreach ($allEvents as $event) {
+            Log::info("Event ID: {$event->id}, Title: {$event->title}, Status: {$event->status}, Date: {$event->event_date} ");
         }
 
-        return view('stud.home', compact('upcomingEvent', 'events', 'filter', 'category'));
+        // Get the approved events for display
+        $approvedEvents = Event::where('status', 'approved')->get();
+        Log::info("Approved events count: " . $approvedEvents->count());
+        foreach ($approvedEvents as $event) {
+            Log::info("Approved Event ID: {$event->id}, Title: {$event->title}, Date: {$event->event_date}");
+        }
+
+        // Execute the query to get paginated results.
+        $events = $eventsQuery->paginate(6);
+        Log::info("Events count being displayed: " . $events->count());
+
+        // Get seat counts for each event
+        $seatCounts = $this->getEventSeatCounts($events->pluck('id')->toArray());
+
+        // Featured events for the homepage - just use the most recent 3 upcoming events
+        $featuredEvents = Event::where('event_date', '>=', $currentDate)
+                              ->where('status', 'approved')
+                              ->orderBy('event_date')
+                              ->limit(3)
+                              ->get();
+
+        return view('stud.home', [
+            'events' => $events,
+            'featuredEvents' => $featuredEvents,
+            'seatCounts' => $seatCounts,
+            'filter' => $filter,
+            'category' => $category,
+        ]);
+    }
+
+    private function getEventSeatCounts(array $eventIds)
+    {
+        $counts = [];
+
+        try {
+            // Get registration counts for each event
+            $registrations = DB::table('subscribers')
+                ->whereIn('event_id', $eventIds)
+                ->select('event_id', DB::raw('count(*) as total'))
+                ->groupBy('event_id')
+                ->get();
+
+            // Format results into an associative array
+            foreach ($registrations as $registration) {
+                $counts[$registration->event_id] = $registration->total;
+            }
+        } catch (\Exception $e) {
+            Log::error("Error getting seat counts: " . $e->getMessage());
+        }
+
+        return $counts;
     }
 }

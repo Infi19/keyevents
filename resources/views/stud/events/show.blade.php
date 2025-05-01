@@ -16,201 +16,183 @@
 <body class="bg-gray-50">
     <x-header></x-header>
 
-    <div class="max-w-5xl mx-auto px-6 py-12">
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <!-- Event Image -->
-            <div class="h-72 bg-gray-200">
-                @if($event->image_path)
-                    <img class="w-full h-full object-cover" 
-                         src="{{ asset('storage/' . $event->image_path) }}" 
-                         alt="{{ $event->title }}"
-                         onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
-                @else
-                    <img class="w-full h-full object-cover" 
-                         src="{{ asset('images/placeholder.jpg') }}" 
-                         alt="Placeholder">
-                @endif
+    <div class="max-w-5xl mx-auto px-6 py-8">
+        <!-- Banner Image -->
+        <div class="w-full h-48 bg-gray-600 rounded-md flex items-center justify-center mb-6">
+            @if($event->image_path)
+                <img class="w-full h-full object-cover rounded-md" 
+                     src="{{ asset('storage/' . $event->image_path) }}" 
+                     alt="{{ $event->title }}"
+                     onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
+            @else
+                <div class="text-white text-center">
+                    Web Development Workshop Banner Image
+                </div>
+            @endif
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Main Content Area (2/3 width) -->
+            <div class="md:col-span-2">
+                <div class="bg-white rounded-md shadow-sm p-6 mb-6">
+                    <!-- Event Title and Categories -->
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $event->title }}</h1>
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">{{ $event->type }}</span>
+                        <span class="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">{{ $event->category }}</span>
+                    </div>
+                    
+                    <!-- About Event Section -->
+                    <div class="mb-6">
+                        <h2 class="text-lg font-semibold mb-2">About Event</h2>
+                        <p class="text-gray-700">{{ $event->about }}</p>
+                    </div>
+                    
+                    <!-- Location Section -->
+                    <div class="mb-6">
+                        <h2 class="text-lg font-semibold mb-2">Location</h2>
+                        <div class="bg-gray-100 h-40 rounded-md mb-2 flex items-center justify-center">
+                            Google Maps Integration
+                        </div>
+                        <p class="text-gray-700">Main Seminar Hall, Computer Science Department</p>
+                    </div>
+                    
+                    <!-- Organizer Section -->
+                    <div>
+                        <h2 class="text-lg font-semibold mb-3">Organizer</h2>
+                        <div class="flex items-center">
+                            <div class="h-12 w-12 bg-gray-200 rounded-full mr-3 overflow-hidden">
+                                <img src="https://ui-avatars.com/api/?name=Tech+Club&background=random" alt="Organizer" class="h-full w-full object-cover">
+                            </div>
+                            <div>
+                                <p class="font-medium">Tech Club</p>
+                                <p class="text-sm text-gray-600">Computer Science Department</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="p-8">
-                <!-- Event Type Badge -->
-                <div class="mb-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $event->type === 'In-Person' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-                        @if($event->type === 'In-Person')
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            <!-- Sidebar (1/3 width) -->
+            <div>
+                <div class="bg-white rounded-md shadow-sm p-6 mb-6">
+                    <!-- Date and Time -->
+                    <div class="mb-4">
+                        <div class="flex items-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            In-Person Event
-                        @else
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4v-4H5a2 2 0 01-2-2V5zm2-2a4 4 0 00-4 4v8a4 4 0 004 4h1v2l6-6h5a4 4 0 004-4V7a4 4 0 00-4-4H5z" clip-rule="evenodd" />
+                            <span class="font-medium">{{ \Carbon\Carbon::parse($event->event_date)->format('F d, Y') }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Virtual Event
-                        @endif
-                    </span>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 ml-2">
-                        {{ $event->category }}
-                    </span>
-                </div>
-                
-                <!-- Event Title and Date -->
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $event->title }}</h1>
-                
-                <div class="flex items-center text-gray-600 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {{ \Carbon\Carbon::parse($event->event_date)->format('D, M j, Y') }} | 
-                    {{ $event->time_from_hour }}:{{ str_pad($event->time_from_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_from_period }} to 
-                    {{ $event->time_to_hour }}:{{ str_pad($event->time_to_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_to_period }}
-                </div>
-                
-                <!-- Divider -->
-                <div class="border-t border-gray-200 my-6"></div>
-                
-                <!-- About Section -->
-                <div class="mb-8">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">About this event</h2>
-                    <div class="text-gray-700 space-y-4">
-                        <p>{{ $event->about }}</p>
-                    </div>
-                </div>
-                
-                <!-- Registration Section -->
-                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                    <!-- Flash Messages -->
-                    @if(session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
+                            <span>
+                                {{ $event->time_from_hour }}:{{ str_pad($event->time_from_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_from_period }} - 
+                                {{ $event->time_to_hour }}:{{ str_pad($event->time_to_minute, 2, '0', STR_PAD_LEFT) }} {{ $event->time_to_period }}
+                            </span>
                         </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('error') }}</span>
-                        </div>
-                    @endif
-
-                    @if(session('info'))
-                        <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('info') }}</span>
-                        </div>
-                    @endif
-                
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">Ready to attend?</h3>
-                        <span class="text-gray-600">{{ $event->seats_available ?? 'Limited' }} seats available</span>
                     </div>
                     
-                    @auth
-                        @if(auth()->user()->isStudent())
-                            @php
-                                $isRegistered = App\Models\Subscriber::where('user_id', auth()->id())
-                                    ->where('event_id', $event->id)
-                                    ->exists();
+                    <!-- Seats Remaining -->
+                    <div class="flex items-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <span>{{ $availableSeats }} seats remaining</span>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="space-y-3">
+                        @auth
+                            @if(auth()->user()->isStudent())
+                                @php
+                                    $isRegistered = App\Models\Subscriber::where('user_id', auth()->id())
+                                        ->where('event_id', $event->id)
+                                        ->exists();
+                                    
+                                    $isFull = $availableSeats <= 0;
+                                @endphp
                                 
-                                $registrationsCount = App\Models\Subscriber::where('event_id', $event->id)->count();
-                                $isFull = $registrationsCount >= $event->seats_available;
-                            @endphp
-                            
-                            @if($isRegistered)
-                                <div class="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
-                                    <div class="flex">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3">
-                                            <h3 class="text-sm font-medium text-green-800">You're registered!</h3>
-                                            <div class="mt-2 text-sm text-green-700">
-                                                <p>You have successfully registered for this event. We look forward to seeing you there!</p>
+                                @if($isRegistered)
+                                    <div class="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
+                                        <div class="flex">
+                                            <div class="flex-shrink-0">
+                                                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                </svg>
                                             </div>
-                                            <div class="mt-4">
-                                                <form method="POST" action="{{ route('event.cancel', $event->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="return confirm('Are you sure you want to cancel your registration?')">
-                                                        Cancel Registration
-                                                    </button>
-                                                </form>
+                                            <div class="ml-3">
+                                                <h3 class="text-sm font-medium text-green-800">You're registered!</h3>
+                                                <div class="mt-4">
+                                                    <form method="POST" action="{{ route('event.cancel', $event->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none" onclick="return confirm('Are you sure you want to cancel your registration?')">
+                                                            Cancel Registration
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @elseif($isFull)
-                                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-4">
-                                    <div class="flex">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3">
-                                            <h3 class="text-sm font-medium text-yellow-800">Event is full</h3>
-                                            <div class="mt-2 text-sm text-yellow-700">
-                                                <p>Sorry, all seats for this event have been reserved. Please check back later as spots may become available if other attendees cancel.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @elseif($event->status != 'approved')
-                                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-4">
-                                    <div class="flex">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3">
-                                            <h3 class="text-sm font-medium text-yellow-800">Registration Not Available</h3>
-                                            <div class="mt-2 text-sm text-yellow-700">
-                                                <p>This event is not yet available for registration. Please check back later.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                <form method="POST" action="{{ route('event.register', $event->id) }}">
-                                    @csrf
-                                    <button type="submit" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-md transition-colors">
-                                        Register for this event
+                                @elseif($isFull)
+                                    <button class="w-full bg-gray-800 opacity-50 cursor-not-allowed text-white font-medium py-3 px-4 rounded-md">
+                                        No Seats Available
                                     </button>
-                                </form>
+                                @elseif($event->status != 'approved')
+                                    <button class="w-full bg-gray-800 opacity-50 cursor-not-allowed text-white font-medium py-3 px-4 rounded-md">
+                                        Registration Unavailable
+                                    </button>
+                                @else
+                                    <form method="POST" action="{{ route('event.register', $event->id) }}">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition-colors">
+                                            Register Now
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <div class="text-center text-sm text-gray-600">
+                                    Registration available to students only
+                                </div>
                             @endif
                         @else
-                            <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-blue-800">Admin/Organizer View</h3>
-                                        <div class="mt-2 text-sm text-blue-700">
-                                            <p>You are viewing this event as an admin or organizer. Registration is available for students only.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @else
-                        <div class="mb-4 text-center">
-                            <a href="{{ route('login') }}" class="w-full block bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-md transition-colors">
-                                Log in to register
+                            <a href="{{ route('login') }}" class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md text-center">
+                                Login to Register
+                            </a>
+                        @endauth
+
+                        <div class="flex items-center justify-between space-x-3">
+                            <button class="flex-1 flex items-center justify-center py-2 px-3 border border-gray-300 rounded-md hover:bg-gray-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                </svg>
+                                Share
+                            </button>
+                            <a href="#" class="flex-1 flex items-center justify-center py-2 px-3 border border-gray-300 rounded-md hover:bg-gray-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download Brochure
                             </a>
                         </div>
-                    @endauth
-                    
-                    <p class="text-sm text-gray-500 mt-4 text-center">
-                        Registration is free and only takes a minute
-                    </p>
+                    </div>
+
+                    <div class="mt-6 text-center text-sm text-gray-500">
+                        Registration closes in 5 days
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <x-footer></x-footer>
+
+    <script>
+        // Add any necessary JavaScript here
+    </script>
 </body>
 </html>

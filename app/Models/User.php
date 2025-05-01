@@ -100,4 +100,20 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class, 'subscribers');
     }
+    
+    /**
+     * Get the registrations by this user
+     */
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+    
+    /**
+     * Get the events this user is registered for
+     */
+    public function registeredEvents()
+    {
+        return $this->belongsToMany(Event::class, 'registrations');
+    }
 }

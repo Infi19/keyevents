@@ -10,6 +10,7 @@ use App\Http\Middleware\CheckRole;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\OrganizerController;
 
 // Public routes accessible to all users
 Route::get('/', [HomeController::class, 'index'])->name('stud.home');
@@ -49,7 +50,8 @@ Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
 
 // Organizer only routes
 Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () {
-    // Nothing specific to only organizers here anymore - moved to shared section
+    // New organizer dashboard
+    Route::get('/organizer/dashboard', [OrganizerController::class, 'dashboard'])->name('organizer.dashboard');
 });
 
 // Admin and Organizer shared routes

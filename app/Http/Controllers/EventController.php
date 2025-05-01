@@ -132,61 +132,28 @@ class EventController extends Controller
     
     public function show($id)
     {   
-    // Retrieve the event using the ID
-    $event = Event::findOrFail($id);
-    
-    // Return the view with the event data
-    return view('stud.events.show', compact('event'));
+        // Retrieve the event using the ID
+        $event = Event::findOrFail($id);
+        
+        // Calculate available seats
+        $totalSeats = $event->seats_available;
+        $bookedSeats = \App\Models\Subscriber::where('event_id', $event->id)->count();
+        $availableSeats = max(0, $totalSeats - $bookedSeats);
+        
+        // Return the view with the event data
+        return view('stud.events.show', compact('event', 'availableSeats', 'bookedSeats'));
     }
     
     public function dashboard()
     {
         $user = auth()->user();
         
-        // Redirect users to their proper dashboard
-        if ($user->isAdmin()) {
+        if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
-        } elseif ($user->isStudent()) {
-            return redirect()->route('stud.dashboard');
-        }
-        
-        // Only organizers should reach this point
-        if ($user->isOrganizer()) {
-            try {
-                // Try to get events by user_id
-                $events = Event::where('user_id', $user->id)->paginate(10);
-                
-                // Organizer statistics
-                $stats = [
-                    'total_events' => Event::where('user_id', $user->id)->count(),
-                    'approved_events' => Event::where('user_id', $user->id)->where('status', 'approved')->count(),
-                    'pending_events' => Event::where('user_id', $user->id)->where('status', 'pending')->count(),
-                    'total_participants' => Subscriber::whereHas('event', function($query) use ($user) {
-                        $query->where('user_id', $user->id);
-                    })->count(),
-                    'recent_events' => Event::where('user_id', $user->id)
-                        ->orderBy('created_at', 'desc')
-                        ->take(5)
-                        ->get()
-                ];
-            } catch (\Exception $e) {
-                // Fallback in case user_id column doesn't exist yet
-                $events = Event::paginate(10);
-                
-                // Basic statistics without filtering by user
-                $stats = [
-                    'total_events' => Event::count(),
-                    'approved_events' => Event::where('status', 'approved')->count(),
-                    'pending_events' => Event::where('status', 'pending')->count(),
-                    'total_participants' => Subscriber::count(),
-                    'recent_events' => Event::orderBy('created_at', 'desc')->take(5)->get()
-                ];
-            }
-            
-            return view('dashboard', compact('events', 'stats'));
+        } elseif ($user->role === 'organizer') {
+            return redirect()->route('organizer.dashboard');
         } else {
-            // Shouldn't reach here, but just in case
-            return redirect()->route('stud.home');
+            return redirect()->route('stud.dashboard');
         }
     }
 }

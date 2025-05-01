@@ -45,4 +45,12 @@ class Event extends Model
     {
         return $this->hasMany(Subscriber::class);
     }
+    
+    /**
+     * Get all registrations for this event
+     */
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
 }

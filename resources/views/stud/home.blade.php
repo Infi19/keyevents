@@ -1,3 +1,4 @@
+<x-student-layout>
 @vite(['resources/css/app.css'])
 
 <html lang="en">
@@ -19,7 +20,7 @@
     <x-header></x-header>
     
     <!-- Hero Section -->
-    <div class="bg-gray-900 text-white py-16">
+    <div class="bg-gray-900 text-white py-16 rounded-lg mb-8">
         <div class="max-w-7xl mx-auto px-6">
             <div class="max-w-2xl">
                 <h1 class="text-4xl font-bold mb-4">Discover Amazing College Events</h1>
@@ -32,7 +33,7 @@
     </div>
     
     <!-- Search Section -->
-    <div class="max-w-7xl mx-auto px-6 py-8" id="events">
+    <div class="max-w-7xl mx-auto py-8" id="events">
         <div class="flex flex-wrap items-center gap-4 mb-8">
             <div class="w-full md:w-auto flex-grow">
                 <input 
@@ -59,6 +60,41 @@
                 <input type="date" class="border border-gray-300 rounded-lg px-4 py-2">
             </div>
         </div>
+        
+        <!-- Featured Events Section (optional) -->
+        @if($featuredEvents->count() > 0)
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Featured Events</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach($featuredEvents as $featured)
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow hover:shadow-md">
+                    <div class="h-40 bg-gray-200 relative">
+                        @if($featured->image_path)
+                            <img 
+                                class="w-full h-full object-cover" 
+                                src="{{ asset('storage/' . $featured->image_path) }}" 
+                                alt="{{ $featured->title }}"
+                                onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
+                        @else
+                            <img 
+                                class="w-full h-full object-cover" 
+                                src="{{ asset('images/placeholder.jpg') }}" 
+                                alt="Placeholder">
+                        @endif
+                        <div class="absolute top-0 left-0 bg-blue-600 text-white text-xs font-bold px-3 py-1">
+                            Featured
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold mb-1">{{ $featured->title }}</h3>
+                        <p class="text-sm text-gray-500 mb-2">{{ \Carbon\Carbon::parse($featured->event_date)->format('M d, Y') }}</p>
+                        <a href="{{ route('stud.events.show', $featured->id) }}" class="text-blue-600 text-sm font-medium hover:underline">Learn more →</a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
         
         <!-- Event Tabs -->
         <div class="border-b border-gray-200 mb-6">
@@ -134,7 +170,18 @@
                             </div>
                             
                             <!-- Seats Left -->
-                            <span class="text-sm text-gray-500">{{ $event->seats_available ?? 'Limited' }} seats available</span>
+                            <span class="text-sm text-gray-500">
+                                @php
+                                    $bookedSeats = $seatCounts[$event->id] ?? 0;
+                                    $availableSeats = max(0, $event->seats_available - $bookedSeats);
+                                @endphp
+                                
+                                @if($availableSeats > 0)
+                                    {{ $availableSeats }} seats available
+                                @else
+                                    <span class="text-red-600">Fully booked</span>
+                                @endif
+                            </span>
                         </div>
                         
                         <a href="{{ route('stud.events.show', $event->id) }}" class="block mt-4 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">Register</a>
@@ -156,3 +203,4 @@
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
+</x-student-layout>

@@ -39,11 +39,13 @@ class RegistrationController extends Controller
                 return redirect()->back()->with('info', 'You are already registered for this event.');
             }
             
-            // Check if seats are available
+            // Get latest count of registrations
             $registeredCount = Subscriber::where('event_id', $event->id)->count();
+            $availableSeats = max(0, $event->seats_available - $registeredCount);
             
-            if ($registeredCount >= $event->seats_available) {
-                return redirect()->back()->with('error', 'Sorry, this event is fully booked.');
+            // Check if seats are still available
+            if ($availableSeats <= 0) {
+                return redirect()->back()->with('error', 'Sorry, this event is fully booked. All seats have been reserved.');
             }
             
             // Create registration
