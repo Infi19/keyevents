@@ -1,6 +1,6 @@
 @vite(['resources/css/app.css'])
 
-<x-student-layout>
+<x-app-layout>
     <!-- Dashboard Header -->
     <div class="max-w-6xl">
         <h1 class="text-xl font-bold text-gray-900">My Dashboard</h1>
@@ -171,4 +171,4 @@
             </div>
         </div>
     </div>
-</x-student-layout> 
+</x-app-layout> 

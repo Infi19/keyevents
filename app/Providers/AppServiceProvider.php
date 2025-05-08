@@ -25,5 +25,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('no-result', NoResult::class);
         Blade::component('drop-d', DropD::class);
         Blade::component('layouts.student', 'student-layout');
+        Blade::component('layouts.organizer', 'organizer-layout');
+        Blade::component('layouts.app', 'app-layout');
     }
 }

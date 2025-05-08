@@ -1,6 +1,4 @@
-@extends('layouts.organizer')
-
-@section('content')
+<x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -248,75 +246,54 @@
 
                     // Show drag and drop functionality
                     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                        dragDropArea.addEventListener(eventName, preventDefaults, false);
+                        dragDropArea.addEventListener(eventName, (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }, false);
                     });
 
-                    function preventDefaults(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-
-                    ['dragenter', 'dragover'].forEach(eventName => {
-                        dragDropArea.addEventListener(eventName, highlight, false);
-                    });
-
-                    ['dragleave', 'drop'].forEach(eventName => {
-                        dragDropArea.addEventListener(eventName, unhighlight, false);
-                    });
-
-                    function highlight() {
-                        dragDropArea.classList.add('border-blue-500', 'bg-blue-50');
-                    }
-
-                    function unhighlight() {
-                        dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
-                    }
-
-                    dragDropArea.addEventListener('drop', handleDrop, false);
-
-                    function handleDrop(e) {
+                    // Handle drop
+                    dragDropArea.addEventListener('drop', function(e) {
                         const dt = e.dataTransfer;
                         const files = dt.files;
-                        const file = files[0];
                         
-                        // Only allow images
-                        if (file.type.includes('image')) {
+                        if (files.length) {
                             fileInput.files = files;
-                            previewFile(file);
-                        } else {
-                            alert('Please upload a valid image file (JPG, PNG, or JPEG)');
-                        }
-                    }
-
-                    fileInput.addEventListener('change', function() {
-                        const file = this.files[0];
-                        if (file) {
-                            previewFile(file);
+                            updatePreview(files[0]);
                         }
                     });
 
-                    function previewFile(file) {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onloadend = function() {
-                            previewImage.src = reader.result;
-                            // Show the preview area
-                            previewArea.classList.remove('hidden');
-                            showPreviewInDragArea();
+                    // Handle file input change
+                    fileInput.addEventListener('change', function() {
+                        if (this.files.length) {
+                            updatePreview(this.files[0]);
                         }
-                    }
+                    });
 
-                    function showPreviewInDragArea() {
-                        // Hide the default upload icon and show a thumbnail instead
-                        svgIcon.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                            </svg>
-                        `;
+                    // Update preview function
+                    function updatePreview(file) {
+                        if (!file.type.match('image.*')) {
+                            console.error('Not an image file');
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            // Set the source for preview image
+                            previewImage.src = e.target.result;
+                            
+                            // Show preview area
+                            previewArea.classList.remove('hidden');
+                            dragDropArea.classList.add('border-blue-500');
+                            svgIcon.classList.add('text-blue-500');
+                        }
+                        
+                        reader.readAsDataURL(file);
                     }
-                });
+                    });
                 </script>
             </div>
         </div>
     </div>
-@endsection
+</x-app-layout>
