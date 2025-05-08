@@ -16,8 +16,8 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-50">
-        <!-- Main Header -->
-        <header class="bg-white shadow">
+        <!-- Main Header - Desktop Only -->
+        <header class="bg-white shadow fixed top-0 left-0 right-0 z-50 hidden md:block">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo -->
@@ -27,7 +27,7 @@
                     </div>
                     
                     <!-- Navigation Links -->
-                    <div class="hidden md:flex space-x-8">
+                    <div class="flex space-x-8">
                         <a href="{{ route('stud.home') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
                         <a href="{{ route('my.events') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
                         <a href="{{ route('certificates') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
@@ -67,9 +67,9 @@
             </div>
         </header>
         
-        <!-- Mobile Menu (hidden by default) -->
-        <div class="md:hidden" x-data="{ open: false }">
-            <div @click="open = !open" class="px-4 py-3 bg-white shadow">
+        <!-- Mobile Menu -->
+        <div class="md:hidden fixed top-0 left-0 right-0 z-50" x-data="{ open: false }">
+            <div class="px-4 py-3 bg-white shadow">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-8 w-auto mr-2">
@@ -104,6 +104,9 @@
                 @endauth
             </div>
         </div>
+        
+        <!-- Spacer to prevent content from being hidden under fixed header -->
+        <div class="h-16"></div>
         
         <!-- Main Content -->
         <main class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
