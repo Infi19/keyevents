@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'EventHub') }}</title>
+    <title>{{ config('app.name', 'Key Events') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -13,107 +13,105 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <!-- Additional Styles -->
-    <style>
-        .sidebar-active {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: rgb(59, 130, 246);
-            border-left: 3px solid rgb(59, 130, 246);
-        }
-    </style>
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-50">
-        <!-- Student Sidebar -->
-        <div class="flex">
-            <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-md z-10">
-                <!-- Logo -->
-                <div class="flex items-center h-16 px-6 border-b">
-                    <h1 class="text-xl font-bold">EventHub</h1>
-                </div>
-                
-                <!-- Navigation -->
-                <nav class="mt-6">
-                    <ul>
-                        <li>
-                            <a href="{{ route('stud.home') }}" class="flex items-center px-6 py-3 hover:bg-gray-100 {{ request()->routeIs('stud.home') ? 'sidebar-active' : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                </svg>
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('my.events') }}" class="flex items-center px-6 py-3 hover:bg-gray-100 {{ request()->routeIs('my.events') ? 'sidebar-active' : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                My Events
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('certificates') }}" class="flex items-center px-6 py-3 hover:bg-gray-100 {{ request()->routeIs('certificates') ? 'sidebar-active' : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
-                                Certificates
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('notifications') }}" class="flex items-center px-6 py-3 hover:bg-gray-100 {{ request()->routeIs('notifications') ? 'sidebar-active' : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                </svg>
-                                Notifications
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center px-6 py-3 hover:bg-gray-100 {{ request()->routeIs('profile.edit') ? 'sidebar-active' : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                Profile
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                
-                <!-- User Profile -->
-                <div class="absolute bottom-0 w-full border-t p-4">
+        <!-- Main Header -->
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
                     <div class="flex items-center">
-                        <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-800">
-                            {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium">{{ Auth::user()->name ?? 'John Doe' }}</p>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="text-xs text-gray-500 hover:underline">Logout</button>
-                            </form>
-                        </div>
+                        <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
+                        <h1 class="text-xl font-bold">Key Events</h1>
+                    </div>
+                    
+                    <!-- Navigation Links -->
+                    <div class="hidden md:flex space-x-8">
+                        <a href="{{ route('stud.home') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
+                        <a href="{{ route('my.events') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
+                        <a href="{{ route('certificates') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
+                        <a href="{{ route('notifications') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('notifications') ? 'bg-gray-100' : '' }}">Notifications</a>
+                    </div>
+                    
+                    <!-- Auth Buttons -->
+                    <div class="flex items-center space-x-4">
+                        @auth
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
+                                    <div class="mr-2 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-800">
+                                        {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            Log Out
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">Log in</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-md">Register</a>
+                            @endif
+                        @endauth
                     </div>
                 </div>
             </div>
-            
-            <!-- Main Content -->
-            <div class="ml-64 flex-1 p-8">
-                <!-- User Header -->
-                <div class="flex justify-end mb-6">
+        </header>
+        
+        <!-- Mobile Menu (hidden by default) -->
+        <div class="md:hidden" x-data="{ open: false }">
+            <div @click="open = !open" class="px-4 py-3 bg-white shadow">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <span class="text-sm font-medium text-gray-700">{{ Auth::user()->name ?? 'John Doe' }}</span>
-                        <div class="ml-2 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-800">
-                            {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
-                        </div>
+                        <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-8 w-auto mr-2">
+                        <h1 class="text-lg font-bold">Key Events</h1>
                     </div>
+                    <button @click="open = !open" class="text-gray-500 focus:outline-none">
+                        <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg x-show="open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                
-                <!-- Page Content -->
-                <main>
-                    {{ $slot }}
-                </main>
+            </div>
+            <div x-show="open" class="bg-white shadow-lg">
+                <a href="{{ route('stud.home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
+                <a href="{{ route('my.events') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
+                <a href="{{ route('certificates') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
+                <a href="{{ route('notifications') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('notifications') ? 'bg-gray-100' : '' }}">Notifications</a>
+                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('profile.edit') ? 'bg-gray-100' : '' }}">Profile</a>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Log Out</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Log in</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Register</a>
+                    @endif
+                @endauth
             </div>
         </div>
+        
+        <!-- Main Content -->
+        <main class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            {{ $slot }}
+        </main>
     </div>
+    
+    <!-- Alpine.js (for dropdowns and mobile menu) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html> 

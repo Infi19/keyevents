@@ -19,14 +19,23 @@ export default {
                 calibri: ["Calibri", "Arial", "sans-serif"],
             },
             colors: {
-                'custom-blue': '#152451',
-                'custom-lblue': '#92AFD7',
-                'custom-wblue': '#E1E7F5',
-                'custom-ylo': '#f2cc8f',
-                'custom-pink': '#FFE0E9',
-                'custom-lgreen': '#ff4d6d',
-                'custom-kcolor':'#07384D'
+                'primary': '#003E53',     // Navy Blue
+                'secondary': '#A9D9E8',   // Sky Blue
+                'accent': '#F8961E',      // Orange
+                'light': '#FFFFFF',       // White
+                'dark': '#264653',        // Charcoal/Dark Teal
+                'light-gray': '#F4F4F4',  // Light Gray
+                'blue-gray': '#D9EAF2',   // Soft Blue-Gray
+                'text': '#1E1E1E',        // Black for text
                 
+                // Keep the old colors for backward compatibility (to avoid breaking existing code)
+                'custom-blue': '#003E53',
+                'custom-lblue': '#A9D9E8',
+                'custom-wblue': '#A9D9E8',
+                'custom-ylo': '#F8961E',
+                'custom-pink': '#D9EAF2',
+                'custom-lgreen': '#F8961E',
+                'custom-kcolor': '#264653'
               },
         },
     },

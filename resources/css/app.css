@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom color palette classes */
+@layer base {
+    body {
+        @apply text-text;
+        @apply bg-light;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-primary;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-primary text-light px-4 py-2 rounded-md hover:bg-dark transition-colors;
+    }
+    
+    .btn-secondary {
+        @apply bg-light border border-secondary text-primary px-4 py-2 rounded-md hover:bg-blue-gray transition-colors;
+    }
+    
+    .btn-accent {
+        @apply bg-accent text-dark px-4 py-2 rounded-md hover:bg-accent/80 transition-colors;
+    }
+    
+    .card {
+        @apply bg-light p-6 rounded-lg shadow-md border border-blue-gray;
+    }
+    
+    .section-bg {
+        @apply bg-light-gray py-12;
+    }
+}
+
+/* Custom utilities */
+@layer utilities {
+    .text-shadow {
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+}

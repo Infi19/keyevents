@@ -1,10 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-gray-800 leading-tight">
-            {{ __('Create New Event') }}
-        </h2>
-    </x-slot>
+@extends('layouts.organizer')
 
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -250,72 +246,77 @@
                         return; // Exit early if previewImage is missing
                     }
 
-                    // Handle SVG hover to change border color
-                    svgIcon.addEventListener('mouseenter', () => {
-                        dragDropArea.classList.add('border-indigo-600'); // Apply border color change
+                    // Show drag and drop functionality
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                        dragDropArea.addEventListener(eventName, preventDefaults, false);
                     });
 
-                    svgIcon.addEventListener('mouseleave', () => {
-                        dragDropArea.classList.remove('border-indigo-600'); // Revert border color
+                    function preventDefaults(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+
+                    ['dragenter', 'dragover'].forEach(eventName => {
+                        dragDropArea.addEventListener(eventName, highlight, false);
                     });
 
-                    // Handle dragover event to show that a file can be dropped
-                    dragDropArea.addEventListener('dragover', (event) => {
-                        event.preventDefault();
-                        dragDropArea.classList.add('border-indigo-600'); // Change the border to indicate drop area
+                    ['dragleave', 'drop'].forEach(eventName => {
+                        dragDropArea.addEventListener(eventName, unhighlight, false);
                     });
 
-                    // Handle dragleave event to revert the border when dragging stops
-                    dragDropArea.addEventListener('dragleave', () => {
-                        dragDropArea.classList.remove('border-indigo-600');
-                    });
+                    function highlight() {
+                        dragDropArea.classList.add('border-blue-500', 'bg-blue-50');
+                    }
 
-                    // Handle drop event to process the dropped files
-                    dragDropArea.addEventListener('drop', (event) => {
-                        event.preventDefault();
-                        dragDropArea.classList.remove('border-indigo-600'); // Revert the border
+                    function unhighlight() {
+                        dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
+                    }
 
-                        const files = event.dataTransfer.files; // Get the dropped files
-                        if (files.length > 0) {
-                            handleFile(files[0]);
-                        }
-                    });
+                    dragDropArea.addEventListener('drop', handleDrop, false);
 
-                    // Handle file selection via file input (when file is manually selected)
-                    fileInput.addEventListener('change', () => {
-                        const files = fileInput.files;
-                        if (files.length > 0) {
-                            handleFile(files[0]);
-                        }
-                    });
-
-                    // Function to handle file (common for both drag/drop and manual selection)
-                    function handleFile(file) {
-                        // Check if the file is an image (PNG, JPG, JPEG)
-                        if (file && file.type.startsWith('image/')) {
-                            // Display the preview area
-                            previewArea.classList.remove('hidden');
-
-                            // Create a URL for the image and set it as the preview
-                            const imageUrl = URL.createObjectURL(file);
-                            previewImage.src = imageUrl; // Set the image source
-
-                            // Manually trigger the file input change event to set the file in the input (for form submission)
-                            const dataTransfer = new DataTransfer();
-                            dataTransfer.items.add(file); // Add the file to the DataTransfer object
-                            fileInput.files = dataTransfer.files; // Assign the new FileList to the input
+                    function handleDrop(e) {
+                        const dt = e.dataTransfer;
+                        const files = dt.files;
+                        const file = files[0];
+                        
+                        // Only allow images
+                        if (file.type.includes('image')) {
+                            fileInput.files = files;
+                            previewFile(file);
                         } else {
-                            // If the file is not an image, hide the preview
-                            previewArea.classList.add('hidden');
-                            alert('Please upload an image file (PNG, JPG, JPEG).');
-                            
-                            // Clear the file input
-                            fileInput.value = '';
+                            alert('Please upload a valid image file (JPG, PNG, or JPEG)');
                         }
+                    }
+
+                    fileInput.addEventListener('change', function() {
+                        const file = this.files[0];
+                        if (file) {
+                            previewFile(file);
+                        }
+                    });
+
+                    function previewFile(file) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = function() {
+                            previewImage.src = reader.result;
+                            // Show the preview area
+                            previewArea.classList.remove('hidden');
+                            showPreviewInDragArea();
+                        }
+                    }
+
+                    function showPreviewInDragArea() {
+                        // Hide the default upload icon and show a thumbnail instead
+                        svgIcon.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        `;
                     }
                 });
                 </script>
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
