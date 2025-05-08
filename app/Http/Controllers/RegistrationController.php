@@ -7,6 +7,7 @@ use App\Models\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class RegistrationController extends Controller
 {
@@ -25,6 +26,11 @@ class RegistrationController extends Controller
             // Check if event is approved
             if ($event->status !== 'approved') {
                 return redirect()->back()->with('error', 'This event is not available for registration at this time.');
+            }
+            
+            // Check if event date is in the past
+            if (Carbon::parse($event->event_date)->isPast()) {
+                return redirect()->back()->with('error', 'Registration is closed for past events.');
             }
             
             // Get the user

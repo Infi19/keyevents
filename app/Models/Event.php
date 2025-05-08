@@ -24,6 +24,7 @@ class Event extends Model
         'user_id',
         'rejection_reason',
         'seats_available',
+        'brochure_path',
     ];
 
     protected $casts = [

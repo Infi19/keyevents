@@ -23,7 +23,7 @@
                     <!-- Logo -->
                     <div class="flex items-center">
                         <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                        <h1 class="text-xl font-bold">Key Events</h1>
+                        <h1 class="text-xl font-bold"><a href="{{ route('stud.home') }}" class="hover:text-gray-700">Key Events</a></h1>
                     </div>
                     
                     <!-- Navigation Links -->
@@ -72,7 +72,7 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-8 w-auto mr-2">
-                        <h1 class="text-lg font-bold">Key Events</h1>
+                        <h1 class="text-lg font-bold"><a href="{{ route('stud.home') }}" class="hover:text-gray-700">Key Events</a></h1>
                     </div>
                     <button @click="open = !open" class="text-gray-500 focus:outline-none">
                         <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

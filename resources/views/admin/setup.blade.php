@@ -90,6 +90,30 @@
                                     <span class="text-red-500 text-sm">{{$message}}</span>
                                 @enderror
                               </div>
+                              
+                              <div class="col-span-full mt-6">
+                                <label class="block text-sm font-medium text-gray-900">Event Brochure (Optional)</label>
+                               
+                                <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/30 px-6 py-8">
+                                  <div class="text-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <div class="mt-4 flex text-sm text-gray-600 justify-center">
+                                      <label for="brochure" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-0 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500">
+                                        <span>Upload a brochure</span>
+                                        <input id="brochure" name="brochure" type="file" class="sr-only" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                                      </label>
+                                    </div>
+                                    <p class="text-xs text-gray-600 mt-1">PDF, DOC, DOCX, PPT, PPTX up to 10MB</p>
+                                    <p class="text-xs text-gray-600">Students will be able to view this brochure for more information about the event</p>
+                                  </div>
+                                </div>
+                                
+                                @error('brochure')
+                                    <span class="text-red-500 text-sm">{{$message}}</span>
+                                @enderror
+                              </div>
                             </div>
                           </div>
                       
@@ -237,6 +261,21 @@
                     const previewArea = document.getElementById('preview-area');
                     const previewImage = document.getElementById('preview-image');
                     const svgIcon = document.querySelector('#drag-drop-area svg');
+                    
+                    // Brochure upload
+                    const brochureInput = document.getElementById('brochure');
+                    const brochureLabel = document.querySelector('label[for="brochure"] span');
+                    const brochureOriginalText = brochureLabel.textContent;
+                    
+                    if (brochureInput) {
+                        brochureInput.addEventListener('change', function() {
+                            if (this.files && this.files[0]) {
+                                brochureLabel.textContent = this.files[0].name;
+                            } else {
+                                brochureLabel.textContent = brochureOriginalText;
+                            }
+                        });
+                    }
 
                     // Check if previewImage exists
                     if (!previewImage) {

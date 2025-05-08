@@ -27,6 +27,7 @@ return new class extends Migration
                 $table->integer('time_to_hour'); // Store hour
                 $table->integer('time_to_minute'); // Store minute
                 $table->string('time_to_period'); // Store AM/PM
+                $table->string('brochure_path')->nullable();
                 $table->timestamps();
             });
         } else {
@@ -67,6 +68,9 @@ return new class extends Migration
                 }
                 if (!Schema::hasColumn('events', 'time_to_period')) {
                     $table->string('time_to_period');
+                }
+                if (!Schema::hasColumn('events', 'brochure_path')) {
+                    $table->string('brochure_path')->nullable();
                 }
             });
         }

@@ -97,6 +97,7 @@
                                     ->exists();
                                 
                                 $isFull = $availableSeats <= 0;
+                                $isPastEvent = \Carbon\Carbon::parse($event->event_date)->isPast();
                             @endphp
                             
                             @if($isRegistered)
@@ -121,6 +122,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            @elseif($isPastEvent)
+                                <button class="w-full bg-gray-800 opacity-50 cursor-not-allowed text-white font-medium py-3 px-4 rounded-md">
+                                    Event has ended
+                                </button>
                             @elseif($isFull)
                                 <button class="w-full bg-gray-800 opacity-50 cursor-not-allowed text-white font-medium py-3 px-4 rounded-md">
                                     No Seats Available
@@ -155,12 +160,21 @@
                             </svg>
                             Share
                         </button>
-                        <a href="#" class="flex-1 flex items-center justify-center py-2 px-3 border border-gray-300 rounded-md hover:bg-gray-50">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Download Brochure
-                        </a>
+                        @if($event->brochure_path)
+                            <a href="{{ asset('storage/' . $event->brochure_path) }}" target="_blank" class="flex-1 flex items-center justify-center py-2 px-3 border border-gray-300 rounded-md hover:bg-gray-50 text-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                View Brochure
+                            </a>
+                        @else
+                            <button disabled class="flex-1 flex items-center justify-center py-2 px-3 border border-gray-300 rounded-md opacity-50 cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                No Brochure
+                            </button>
+                        @endif
                     </div>
                     
                     <!-- Media Gallery Link -->

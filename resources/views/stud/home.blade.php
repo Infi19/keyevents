@@ -182,6 +182,7 @@
                                 @php
                                     $bookedSeats = $seatCounts[$event->id] ?? 0;
                                     $availableSeats = max(0, $event->seats_available - $bookedSeats);
+                                    $isPastEvent = \Carbon\Carbon::parse($event->event_date)->isPast();
                                 @endphp
                                 
                                 @if($availableSeats > 0)
@@ -192,7 +193,11 @@
                             </span>
                         </div>
                         
-                        <a href="{{ route('stud.events.show', $event->id) }}" class="block mt-4 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">Register</a>
+                        @if($isPastEvent)
+                            <button class="block w-full mt-4 text-center bg-gray-800 opacity-50 cursor-not-allowed text-white font-medium py-2 px-4 rounded-md">Event has ended</button>
+                        @else
+                            <a href="{{ route('stud.events.show', $event->id) }}" class="block mt-4 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">Register</a>
+                        @endif
                     </div>
                 </div>
             @empty

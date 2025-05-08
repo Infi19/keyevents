@@ -48,7 +48,7 @@
                                     <!-- Logo -->
                                     <div class="flex items-center mr-8">
                                         <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                        <div class="text-lg font-semibold text-gray-900">Key Events</div>
+                                        <div class="text-lg font-semibold text-gray-900"><a href="{{ route('stud.home') }}" class="hover:text-gray-700">Key Events</a></div>
                                     </div>
                                     
                                     <!-- Navigation Links - Desktop -->
@@ -136,21 +136,21 @@
                                 <!-- Logo -->
                                 <div class="flex items-center">
                                     <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                    <div class="text-lg font-semibold text-gray-900">Key Events</div>
+                                    <h1 class="text-xl font-bold"><a href="{{ route('stud.home') }}" class="hover:text-gray-700">Key Events</a></h1>
                                 </div>
                                 
                                 <!-- Navigation Links -->
                                 <div class="hidden md:flex space-x-8">
-                                    <a href="{{ route('stud.home') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('stud.home') ? 'active nav-link' : 'nav-link' }}">Home</a>
-                                    <a href="{{ route('my.events') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('my.events') ? 'active nav-link' : 'nav-link' }}">My Events</a>
-                                    <a href="{{ route('certificates') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('certificates') ? 'active nav-link' : 'nav-link' }}">Certificates</a>
+                                    <a href="{{ route('stud.home') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
+                                    <a href="{{ route('my.events') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
+                                    <a href="{{ route('certificates') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
                                 </div>
                                 
                                 <!-- Auth Buttons -->
                                 <div class="hidden md:flex items-center space-x-4">
                                     <div class="relative" x-data="{ open: false }">
                                         <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
-                                            <div class="mr-2 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-800">
+                                            <div class="mr-2 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-800">
                                                 {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
                                             </div>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -212,7 +212,7 @@
                                 <!-- Logo -->
                                 <div class="flex items-center">
                                     <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                    <div class="text-lg font-semibold text-gray-900">Key Events</div>
+                                    <div class="text-lg font-semibold text-gray-900"><a href="{{ route('stud.home') }}" class="hover:text-gray-700">Key Events</a></div>
                                 </div>
                                 
                                 <!-- Navigation Links -->
@@ -308,7 +308,7 @@
                             <!-- Logo -->
                             <div class="flex items-center">
                                 <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                <div class="text-lg font-semibold text-gray-900">Key Events</div>
+                                <div class="text-lg font-semibold text-gray-900"><a href="{{ route('stud.home') }}" class="hover:text-gray-700">Key Events</a></div>
                             </div>
                             
                             <!-- Navigation Links -->

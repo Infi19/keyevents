@@ -27,6 +27,7 @@ class EventController extends Controller
                 'title' => 'required|string|max:255',
                 'about' => 'required|string',
                 'file_upload' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+                'brochure' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx|max:10240',
                 'type' => 'required|string|in:In-Person,Virtual',
                 'category' => 'required|string',
                 'event_date' => 'required|date',
@@ -47,6 +48,15 @@ class EventController extends Controller
                 Log::info('Image uploaded to: ' . $imagePath);
             }
             
+            // Handle brochure upload
+            $brochurePath = null;
+            if ($request->hasFile('brochure')) {
+                $brochurePath = $request->file('brochure')->store('event-brochures', 'public');
+                
+                // For debugging
+                Log::info('Brochure uploaded to: ' . $brochurePath);
+            }
+            
             // Get the current user ID or null if not authenticated
             $userId = auth()->check() ? auth()->id() : null;
             
@@ -62,6 +72,7 @@ class EventController extends Controller
                     'title' => $validated['title'],
                     'about' => $validated['about'],
                     'image_path' => $imagePath,
+                    'brochure_path' => $brochurePath,
                     'type' => $validated['type'],
                     'category' => $validated['category'],
                     'event_date' => $validated['event_date'],
@@ -82,6 +93,7 @@ class EventController extends Controller
                     'title' => $validated['title'],
                     'about' => $validated['about'],
                     'image_path' => $imagePath,
+                    'brochure_path' => $brochurePath,
                     'type' => $validated['type'],
                     'category' => $validated['category'],
                     'event_date' => $validated['event_date'],
