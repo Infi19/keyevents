@@ -16,11 +16,13 @@
     
     <style>
         .nav-link {
-            padding: 1.25rem 1rem;
+            padding: 1.25rem 0.6rem;
             font-weight: 500;
             color: #4B5563;
             border-bottom: 2px solid transparent;
             transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .nav-link:hover, .nav-link.active {
@@ -32,6 +34,16 @@
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
             border-bottom: 1px solid #E5E7EB;
         }
+        
+        .nav-container {
+            overflow-x: auto;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        .nav-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
     </style>
 </head>
 <body class="font-sans antialiased h-full">
@@ -41,27 +53,28 @@
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex items-center justify-between">
                     <!-- Logo and Navigation Links -->
-                    <div class="flex items-center">
+                    <div class="flex items-center flex-1 min-w-0">
                         <!-- Logo -->
-                        <div class="flex items-center mr-8">
+                        <div class="flex items-center mr-4 flex-shrink-0">
                             <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
                             <div class="text-lg font-semibold text-gray-900">Key Events</div>
                         </div>
                         
                         <!-- Navigation Links - Desktop -->
-                        <div class="hidden md:flex">
+                        <div class="hidden md:flex nav-container">
                             <a href="{{ route('organizer.dashboard') }}" class="nav-link {{ request()->routeIs('organizer.dashboard') ? 'active' : '' }}">Dashboard</a>
                             <a href="{{ route('setup.form') }}" class="nav-link {{ request()->routeIs('setup.form') ? 'active' : '' }}">Create Event</a>
                             <a href="{{ route('organizer.my-events') }}" class="nav-link {{ request()->routeIs('organizer.my-events') ? 'active' : '' }}">My Events</a>
                             <a href="{{ route('organizer.registrations') }}" class="nav-link {{ request()->routeIs('organizer.registrations*') ? 'active' : '' }}">Registrations</a>
                             <a href="{{ route('organizer.media.overview') }}" class="nav-link {{ request()->routeIs('organizer.media*') || request()->routeIs('organizer.event.media*') ? 'active' : '' }}">Media Gallery</a>
+                            <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports*') ? 'active' : '' }}">Reports</a>
                             <a href="#" class="nav-link">Certificates</a>
                             <a href="#" class="nav-link">Settings</a>
                         </div>
                     </div>
                     
                     <!-- Auth Buttons - Desktop -->
-                    <div class="hidden md:flex items-center">
+                    <div class="hidden md:flex items-center ml-4 flex-shrink-0">
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
                                 <div class="mr-2 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
@@ -116,6 +129,7 @@
                 <a href="{{ route('organizer.my-events') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('organizer.my-events') ? 'bg-gray-100' : '' }}">My Events</a>
                 <a href="{{ route('organizer.registrations') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('organizer.registrations*') ? 'bg-gray-100' : '' }}">Registrations</a>
                 <a href="{{ route('organizer.media.overview') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('organizer.media*') || request()->routeIs('organizer.event.media*') ? 'bg-gray-100' : '' }}">Media Gallery</a>
+                <a href="{{ route('reports.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('reports*') ? 'bg-gray-100' : '' }}">Reports</a>
                 <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Certificates</a>
                 <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>

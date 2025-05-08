@@ -6,13 +6,14 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EditController;
 use App\Http\Controllers\SubscriberController;
-use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\CheckUserRole;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\EventMediaController;
 use App\Http\Controllers\StudentMediaController;
+use App\Http\Controllers\ReportController;
 
 // Public routes accessible to all users
 Route::get('/', [HomeController::class, 'index'])->name('stud.home');
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Student only routes
-Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
+Route::middleware(['auth', CheckUserRole::class . ':student'])->group(function () {
     Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('stud.dashboard');
     Route::get('/student/my-events', [StudentController::class, 'myEvents'])->name('my.events');
     Route::get('/student/certificates', [StudentController::class, 'certificates'])->name('certificates');
@@ -55,7 +56,7 @@ Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
 });
 
 // Organizer only routes
-Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () {
+Route::middleware(['auth', CheckUserRole::class . ':organizer'])->group(function () {
     // New organizer dashboard
     Route::get('/organizer/dashboard', [OrganizerController::class, 'dashboard'])->name('organizer.dashboard');
     // My Events page
@@ -82,16 +83,22 @@ Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () 
 });
 
 // Admin and Organizer shared routes
-Route::middleware(['auth', CheckRole::class . ':organizer,admin'])->group(function () {
+Route::middleware(['auth', CheckUserRole::class . ':admin,organizer'])->group(function () {
     // Event creation for both admins and organizers
     Route::get('/organizer/setup', function () {
         return view('admin.setup');
     })->name('setup.form');
     Route::post('/organizer/setup', [EventController::class, 'store'])->name('setup.submit');
+    
+    // Event report generation
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/events/{event}', [ReportController::class, 'create'])->name('reports.create');
+    Route::post('/reports/events/{event}/preview', [ReportController::class, 'preview'])->name('reports.preview');
+    Route::post('/reports/events/{event}/generate', [ReportController::class, 'generate'])->name('reports.generate');
 });
 
 // Admin only routes
-Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
+Route::middleware(['auth', CheckUserRole::class . ':admin'])->group(function () {
     // User management
     Route::get('/edit', [EditController::class, 'index'])->name('admin.edit');
     

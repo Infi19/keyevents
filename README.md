@@ -31,6 +31,28 @@ A web-based event management system designed for Keystone School of Engineering 
   - Event details included in notifications
   - Queue system for efficient email delivery
 
+## Event Report Generation with Gemini AI
+
+This application includes a powerful event report generation feature powered by Google's Gemini AI. This allows organizers and administrators to:
+
+1. Generate detailed, professional event reports using AI
+2. Customize report content with event-specific details
+3. Include photos from the event media gallery
+4. Preview and edit the generated reports
+5. Download the final report as a PDF
+
+### Setup for Gemini AI Integration
+
+To use the Gemini AI features:
+
+1. Get a Gemini API key from the [Google AI Studio](https://makersuite.google.com/)
+2. Add your API key to the `.env` file:
+   ```
+   GEMINI_API_KEY=your-api-key-here
+   ```
+
+If no API key is provided, the system will use a template-based fallback for report generation.
+
 ## Technical Requirements
 
 - PHP >= 8.1
