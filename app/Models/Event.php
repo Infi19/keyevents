@@ -53,4 +53,12 @@ class Event extends Model
     {
         return $this->hasMany(Registration::class);
     }
+    
+    /**
+     * Get all media files for this event
+     */
+    public function media()
+    {
+        return $this->hasMany(EventMedia::class);
+    }
 }

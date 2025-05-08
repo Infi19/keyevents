@@ -42,22 +42,45 @@ class HomeController extends Controller
     {
         // Get the current date.
         $currentDate = Carbon::now()->toDateString();
+        $now = Carbon::now();
         Log::info("Current date: " . $currentDate);
 
         // Retrieve filter parameters from the query string.
-        $filter   = $request->query('filter');    // e.g., 'In-Person' or 'Virtual'
-        $category = $request->query('category');    // e.g., 'Seminars and Talks', 'Workshop', etc.
+        $filter = $request->query('filter');    // e.g., 'In-Person' or 'Virtual'
+        $search = $request->query('search');    // Search term
+        $eventDate = $request->query('event_date'); // Filter by specific date
+        $status = $request->query('status', 'upcoming'); // Event status: upcoming, ongoing, past
 
         // SIMPLIFIED: Directly fetch all approved events regardless of date
         $eventsQuery = Event::where('status', 'approved');
+        
+        // Apply event status filter
+        if ($status === 'upcoming') {
+            $eventsQuery->where('event_date', '>', $now)->orderBy('event_date', 'asc');
+        } elseif ($status === 'ongoing') {
+            $eventsQuery->whereDate('event_date', $now)->orderBy('time_from_hour', 'asc')->orderBy('time_from_minute', 'asc');
+        } elseif ($status === 'past') {
+            $eventsQuery->where('event_date', '<', $now)->orderBy('event_date', 'desc');
+        }
         
         // Apply filters if they exist
         if ($filter) {
             $eventsQuery->where('type', $filter);
         }
         
-        if ($category) {
-            $eventsQuery->where('category', $category);
+        // Apply search if it exists
+        if ($search) {
+            $eventsQuery->where(function($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('about', 'like', '%' . $search . '%')
+                      ->orWhere('category', 'like', '%' . $search . '%')
+                      ->orWhere('venue', 'like', '%' . $search . '%');
+            });
+        }
+        
+        // Apply date filter if it exists
+        if ($eventDate) {
+            $eventsQuery->whereDate('event_date', $eventDate);
         }
 
         // Log the total count of events
@@ -82,18 +105,31 @@ class HomeController extends Controller
         $seatCounts = $this->getEventSeatCounts($events->pluck('id')->toArray());
 
         // Featured events for the homepage - just use the most recent 3 upcoming events
-        $featuredEvents = Event::where('event_date', '>=', $currentDate)
+        $featuredEventsQuery = Event::where('event_date', '>=', $currentDate)
                               ->where('status', 'approved')
                               ->orderBy('event_date')
-                              ->limit(3)
-                              ->get();
+                              ->limit(3);
+                              
+        // Apply search to featured events if search is provided
+        if ($search) {
+            $featuredEventsQuery->where(function($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('about', 'like', '%' . $search . '%')
+                      ->orWhere('category', 'like', '%' . $search . '%')
+                      ->orWhere('venue', 'like', '%' . $search . '%');
+            });
+        }
+        
+        $featuredEvents = $featuredEventsQuery->get();
 
         return view('stud.home', [
             'events' => $events,
             'featuredEvents' => $featuredEvents,
             'seatCounts' => $seatCounts,
             'filter' => $filter,
-            'category' => $category,
+            'search' => $search,
+            'event_date' => $eventDate,
+            'status' => $status,
         ]);
     }
 

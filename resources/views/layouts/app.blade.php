@@ -48,10 +48,7 @@
                                     <!-- Logo -->
                                     <div class="flex items-center mr-8">
                                         <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                        <div>
-                                            <div class="text-lg font-semibold text-gray-900">Key</div>
-                                            <div class="text-lg font-semibold text-gray-900 -mt-1">Events</div>
-                                        </div>
+                                        <div class="text-lg font-semibold text-gray-900">Key Events</div>
                                     </div>
                                     
                                     <!-- Navigation Links - Desktop -->
@@ -60,7 +57,7 @@
                                         <a href="{{ route('setup.form') }}" class="nav-link {{ request()->routeIs('setup.form') ? 'active' : '' }}">Create Event</a>
                                         <a href="{{ route('organizer.my-events') }}" class="nav-link {{ request()->routeIs('organizer.my-events') ? 'active' : '' }}">My Events</a>
                                         <a href="{{ route('organizer.registrations') }}" class="nav-link {{ request()->routeIs('organizer.registrations*') ? 'active' : '' }}">Registrations</a>
-                                        <a href="#" class="nav-link">Media Gallery</a>
+                                        <a href="{{ route('organizer.media.overview') }}" class="nav-link {{ request()->routeIs('organizer.media*') || request()->routeIs('organizer.event.media*') ? 'active' : '' }}">Media Gallery</a>
                                         <a href="#" class="nav-link">Certificates</a>
                                         <a href="#" class="nav-link">Settings</a>
                                     </div>
@@ -121,7 +118,7 @@
                             <a href="{{ route('setup.form') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('setup.form') ? 'bg-gray-100' : '' }}">Create Event</a>
                             <a href="{{ route('organizer.my-events') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('organizer.my-events') ? 'bg-gray-100' : '' }}">My Events</a>
                             <a href="{{ route('organizer.registrations') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('organizer.registrations*') ? 'bg-gray-100' : '' }}">Registrations</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Media Gallery</a>
+                            <a href="{{ route('organizer.media.overview') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('organizer.media*') || request()->routeIs('organizer.event.media*') ? 'bg-gray-100' : '' }}">Media Gallery</a>
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Certificates</a>
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
@@ -139,10 +136,7 @@
                                 <!-- Logo -->
                                 <div class="flex items-center">
                                     <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                    <div>
-                                        <div class="text-lg font-semibold text-gray-900">Key</div>
-                                        <div class="text-lg font-semibold text-gray-900 -mt-1">Events</div>
-                                    </div>
+                                    <div class="text-lg font-semibold text-gray-900">Key Events</div>
                                 </div>
                                 
                                 <!-- Navigation Links -->
@@ -150,7 +144,6 @@
                                     <a href="{{ route('stud.home') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('stud.home') ? 'active nav-link' : 'nav-link' }}">Home</a>
                                     <a href="{{ route('my.events') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('my.events') ? 'active nav-link' : 'nav-link' }}">My Events</a>
                                     <a href="{{ route('certificates') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('certificates') ? 'active nav-link' : 'nav-link' }}">Certificates</a>
-                                    <a href="{{ route('notifications') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('notifications') ? 'active nav-link' : 'nav-link' }}">Notifications</a>
                                 </div>
                                 
                                 <!-- Auth Buttons -->
@@ -204,7 +197,6 @@
                             <a href="{{ route('stud.home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
                             <a href="{{ route('my.events') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
                             <a href="{{ route('certificates') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
-                            <a href="{{ route('notifications') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('notifications') ? 'bg-gray-100' : '' }}">Notifications</a>
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -220,10 +212,7 @@
                                 <!-- Logo -->
                                 <div class="flex items-center">
                                     <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                    <div>
-                                        <div class="text-lg font-semibold text-gray-900">Key</div>
-                                        <div class="text-lg font-semibold text-gray-900 -mt-1">Events</div>
-                                    </div>
+                                    <div class="text-lg font-semibold text-gray-900">Key Events</div>
                                 </div>
                                 
                                 <!-- Navigation Links -->
@@ -319,10 +308,7 @@
                             <!-- Logo -->
                             <div class="flex items-center">
                                 <img src="{{ asset('images/kslogo.png') }}" alt="College Logo" class="h-10 w-auto mr-2">
-                                <div>
-                                    <div class="text-lg font-semibold text-gray-900">Key</div>
-                                    <div class="text-lg font-semibold text-gray-900 -mt-1">Events</div>
-                                </div>
+                                <div class="text-lg font-semibold text-gray-900">Key Events</div>
                             </div>
                             
                             <!-- Navigation Links -->

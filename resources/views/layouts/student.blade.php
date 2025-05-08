@@ -31,7 +31,6 @@
                         <a href="{{ route('stud.home') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
                         <a href="{{ route('my.events') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
                         <a href="{{ route('certificates') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
-                        <a href="{{ route('notifications') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('notifications') ? 'bg-gray-100' : '' }}">Notifications</a>
                     </div>
                     
                     <!-- Auth Buttons -->
@@ -89,7 +88,6 @@
                 <a href="{{ route('stud.home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('stud.home') ? 'bg-gray-100' : '' }}">Home</a>
                 <a href="{{ route('my.events') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('my.events') ? 'bg-gray-100' : '' }}">My Events</a>
                 <a href="{{ route('certificates') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('certificates') ? 'bg-gray-100' : '' }}">Certificates</a>
-                <a href="{{ route('notifications') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('notifications') ? 'bg-gray-100' : '' }}">Notifications</a>
                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('profile.edit') ? 'bg-gray-100' : '' }}">Profile</a>
                 @auth
                     <form method="POST" action="{{ route('logout') }}">

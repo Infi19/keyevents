@@ -162,6 +162,7 @@
                                     <div class="flex space-x-2">
                                         <a href="{{ route('stud.events.show', $event->id) }}" class="text-blue-600 hover:text-blue-900">View</a>
                                         <a href="{{ route('organizer.events.edit', $event->id) }}" class="text-green-600 hover:text-green-900">Edit</a>
+                                        <a href="{{ route('organizer.event.media.index', $event->id) }}" class="text-purple-600 hover:text-purple-900">Media</a>
                                         <form action="{{ route('organizer.events.destroy', $event->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this event?');">
                                             @csrf
                                             @method('DELETE')

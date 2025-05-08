@@ -20,32 +20,45 @@
     
     <!-- Search Section -->
     <div class="max-w-7xl mx-auto py-8" id="events">
-        <div class="flex flex-wrap items-center gap-4 mb-8">
-            <div class="w-full md:w-auto flex-grow">
-                <input 
-                    type="text" 
-                    placeholder="Search events..." 
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+        <form action="{{ route('stud.home') }}" method="GET" class="mb-8">
+            <div class="flex flex-wrap items-center gap-4 mb-8">
+                <div class="w-full md:w-auto flex-grow">
+                    <input 
+                        type="text" 
+                        name="search"
+                        placeholder="Search events..." 
+                        value="{{ request('search') }}"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <select name="filter" class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                        <option value="">Event Type</option>
+                        <option value="In-Person" {{ request('filter') == 'In-Person' ? 'selected' : '' }}>In-Person</option>
+                        <option value="Virtual" {{ request('filter') == 'Virtual' ? 'selected' : '' }}>Virtual</option>
+                    </select>
+                    
+                    <input type="date" name="event_date" value="{{ request('event_date') }}" class="border border-gray-300 rounded-lg px-4 py-2">
+                    
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        Search
+                    </button>
+                </div>
             </div>
-            <div class="flex flex-wrap gap-3">
-                <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
-                    <option value="">All Departments</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Business">Business</option>
-                    <option value="Engineering">Engineering</option>
-                    <option value="Arts">Arts</option>
-                </select>
-                
-                <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
-                    <option value="">Event Type</option>
-                    <option value="In-Person">In-Person</option>
-                    <option value="Virtual">Virtual</option>
-                </select>
-                
-                <input type="date" class="border border-gray-300 rounded-lg px-4 py-2">
+        </form>
+        
+        <!-- Search Results Counter -->
+        @if(request('search') || request('filter') || request('event_date'))
+        <div class="flex justify-between items-center mb-4 text-gray-600">
+            <div>
+                Found {{ $events->total() }} {{ Str::plural('event', $events->total()) }}
+                @if(request('search')) containing "<span class="font-medium">{{ request('search') }}</span>"@endif
+                @if(request('filter')) of type "<span class="font-medium">{{ request('filter') }}</span>"@endif
+                @if(request('event_date')) on <span class="font-medium">{{ \Carbon\Carbon::parse(request('event_date'))->format('M d, Y') }}</span>@endif
             </div>
+            <a href="{{ route('stud.home') }}" class="text-blue-600 hover:underline">Clear filters</a>
         </div>
+        @endif
         
         <!-- Featured Events Section (optional) -->
         @if($featuredEvents->count() > 0)
@@ -85,15 +98,24 @@
         <!-- Event Tabs -->
         <div class="border-b border-gray-200 mb-6">
             <div class="flex gap-8">
-                <button class="pb-4 text-blue-600 border-b-2 border-blue-600 font-medium">Upcoming</button>
-                <button class="pb-4 text-gray-500 hover:text-gray-700">Ongoing</button>
-                <button class="pb-4 text-gray-500 hover:text-gray-700">Past</button>
+                <a href="{{ route('stud.home', array_merge(request()->except('status', 'page'), ['status' => 'upcoming'])) }}" 
+                   class="pb-4 {{ $status === 'upcoming' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
+                    Upcoming
+                </a>
+                <a href="{{ route('stud.home', array_merge(request()->except('status', 'page'), ['status' => 'ongoing'])) }}" 
+                   class="pb-4 {{ $status === 'ongoing' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
+                    Ongoing
+                </a>
+                <a href="{{ route('stud.home', array_merge(request()->except('status', 'page'), ['status' => 'past'])) }}" 
+                   class="pb-4 {{ $status === 'past' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
+                    Past
+                </a>
             </div>
         </div>
         
         <!-- Events Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            @foreach($events as $index => $event)
+            @forelse($events as $index => $event)
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <!-- Event Image -->
                     <div class="h-48 bg-gray-600 relative">
@@ -173,13 +195,24 @@
                         <a href="{{ route('stud.events.show', $event->id) }}" class="block mt-4 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">Register</a>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="col-span-3 text-center py-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-1">No events found</h3>
+                    <p class="text-gray-500">Try adjusting your search filters or check back later.</p>
+                    <a href="{{ route('stud.home') }}" class="inline-block mt-4 text-blue-600 hover:underline">View all events</a>
+                </div>
+            @endforelse
         </div>
         
         <!-- Pagination -->
+        @if($events->count() > 0)
         <div class="flex justify-center mb-16">
             {{ $events->appends(request()->query())->links('paginate') }}
         </div>
+        @endif
     </div>
     
     <x-footer></x-footer>

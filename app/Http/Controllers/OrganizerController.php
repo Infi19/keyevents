@@ -33,7 +33,9 @@ class OrganizerController extends Controller
                                     ->where('event_date', '>=', now())
                                     ->count(),
                 'average_rating' => 4.8, // Placeholder, you would calculate this from an actual ratings table
-                'media_uploads' => 234, // Placeholder, you would count this from an actual media table
+                'media_uploads' => \App\Models\EventMedia::whereHas('event', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })->count(),
             ];
         }
         

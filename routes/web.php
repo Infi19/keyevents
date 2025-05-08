@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\OrganizerController;
+use App\Http\Controllers\EventMediaController;
+use App\Http\Controllers\StudentMediaController;
 
 // Public routes accessible to all users
 Route::get('/', [HomeController::class, 'index'])->name('stud.home');
@@ -46,6 +48,10 @@ Route::middleware(['auth', CheckRole::class . ':student'])->group(function () {
     Route::post('/events/{id}/register', [RegistrationController::class, 'register'])->name('event.register');
     Route::delete('/events/{id}/cancel', [RegistrationController::class, 'cancel'])->name('event.cancel');
     Route::get('/my-registrations', [RegistrationController::class, 'myRegistrations'])->name('stud.registrations');
+    
+    // Student Media Gallery routes - read-only access
+    Route::get('/events/{event}/media', [StudentMediaController::class, 'show'])->name('stud.event.media');
+    Route::get('/events/{event}/media/{media}', [StudentMediaController::class, 'viewMedia'])->name('stud.event.media.view');
 });
 
 // Organizer only routes
@@ -61,6 +67,18 @@ Route::middleware(['auth', CheckRole::class . ':organizer'])->group(function () 
     Route::get('/organizer/events/{event}/edit', [OrganizerController::class, 'edit'])->name('organizer.events.edit');
     Route::put('/organizer/events/{event}', [OrganizerController::class, 'update'])->name('organizer.events.update');
     Route::delete('/organizer/events/{event}', [OrganizerController::class, 'destroy'])->name('organizer.events.destroy');
+    
+    // Media Gallery overview page
+    Route::get('/organizer/media-gallery', [EventMediaController::class, 'overview'])->name('organizer.media.overview');
+    
+    // Event Media Gallery routes
+    Route::get('/organizer/events/{event}/media', [EventMediaController::class, 'index'])->name('organizer.event.media.index');
+    Route::get('/organizer/events/{event}/media/create', [EventMediaController::class, 'create'])->name('organizer.event.media.create');
+    Route::post('/organizer/events/{event}/media', [EventMediaController::class, 'store'])->name('organizer.event.media.store');
+    Route::get('/organizer/events/{event}/media/{media}', [EventMediaController::class, 'show'])->name('organizer.event.media.show');
+    Route::get('/organizer/events/{event}/media/{media}/edit', [EventMediaController::class, 'edit'])->name('organizer.event.media.edit');
+    Route::put('/organizer/events/{event}/media/{media}', [EventMediaController::class, 'update'])->name('organizer.event.media.update');
+    Route::delete('/organizer/events/{event}/media/{media}', [EventMediaController::class, 'destroy'])->name('organizer.event.media.destroy');
 });
 
 // Admin and Organizer shared routes
